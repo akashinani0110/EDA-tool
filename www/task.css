@@ -1,0 +1,130 @@
+#_page_outlook{
+  padding-top:3%; padding-bottom:1%
+}
+
+#cobo_box_summary{
+  padding-bottom:1%
+}
+
+.modal-header {
+  background: #8b006d;
+  color:white;
+}
+
+.modal-content {
+  margin-left: -20%;
+  width: 150%;}
+
+
+ .navbar-custom-menu {
+       float: left!important;
+       }
+    
+    .box-body{
+              padding-top:0px;
+    }
+    
+    .box.box-solid>.box-header>.box-tools .btn {
+            background: transparent;
+      }
+    
+    .box.box-solid.box-primary>.box-header {
+                    background: linear-gradient(45deg, #344570, #9bcc9c);
+                    height: 50%;
+                    }
+    
+        .skin-blue .main-header .navbar .nav>li>a {
+                    color: black;
+                    font-size: 20px;
+        }
+        
+         .skin-blue .main-header .navbar .nav>li>a:hover {
+                    color: white;
+                    font-size: 20px;
+                }
+
+ 
+
+        .sidebar-menu{
+              margin-top:60px;
+              padding-left:5px;
+        }
+        
+        .main-header {
+        background: #344570;
+        }
+
+ 
+
+        .main-header > .navbar {
+              height:50px;
+        }
+
+ 
+
+        /* logo */
+        .skin-blue .main-header .logo {
+                              background-color: white;
+                              height: 90px!important;
+                              width:110px;
+                              }
+
+ 
+
+        /* logo when hovered */
+        .skin-blue .main-header .logo:hover {
+                              background-color: white;
+                              }
+
+ 
+
+        /* navbar (rest of the header) */
+        .skin-blue .main-header .navbar {
+                              background: linear-gradient(45deg, #344570, #9bcc9c);
+        }
+
+ 
+
+        .skin-blue .main-header .navbar .sidebar-toggle {
+                  display:none;
+              }
+
+ 
+
+        /* main sidebar */
+        .skin-blue .main-sidebar {
+                              background-color: white;
+                              }
+
+ 
+
+        /* active selected tab in the sidebarmenu */
+        .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
+                              background-color: white;
+                              border-color: #354670;
+                              border-width: thick;
+                              font-weight: bold;
+                              }
+
+ 
+
+        /* other links in the sidebarmenu */
+        .skin-blue .main-sidebar .sidebar .sidebar-menu a{
+                              background-color: white;
+                              color: #000000;
+                              }
+
+ 
+
+        /* other links in the sidebarmenu when hovered */
+         .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
+                              background-color: white;
+                              border-color: #8cb895;
+                              border-width: thick;
+         }
+
+ 
+
+         .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
+                             width:375px;
+         }

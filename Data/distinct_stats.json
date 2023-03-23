@@ -1,0 +1,22 @@
+[
+  {
+    "Var1": "total_observation",
+    "Freq": "39,969,766"
+  },
+  {
+    "Var1": "distinct_scientificName",
+    "Freq": "55,732"
+  },
+  {
+    "Var1": "distinct_vernacularName",
+    "Freq": "27,638"
+  },
+  {
+    "Var1": "distinct_location",
+    "Freq": "223"
+  },
+  {
+    "Var1": "distinct_taxon_rank",
+    "Freq": "7"
+  }
+  ]

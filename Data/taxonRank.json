@@ -1,0 +1,30 @@
+[
+  {
+    "taxon rank": "forma",
+    "count": 71890
+  },
+  {
+    "taxon rank": "hybrid",
+    "count": 32047
+  },
+  {
+    "taxon rank": "multispecies",
+    "count": 402278
+  },
+  {
+    "taxon rank": "species",
+    "count": 38918657
+  },
+  {
+    "taxon rank": "subspecies",
+    "count": 433318
+  },
+  {
+    "taxon rank": "synonym",
+    "count": 56526
+  },
+  {
+    "taxon rank": "variety",
+    "count": 55050
+  }
+  ]
