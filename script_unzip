@@ -1,0 +1,11 @@
+# loop through the range of i values and extract the corresponding zip files
+for (i in 1:37) {
+  # specify the name of the zip file
+  zip_file <- paste0("occurence_", i, ".zip")
+  # extract the zip file
+  unzip(zip_file)
+}
+# remove all zip files
+file.remove(list.files(pattern = "*.zip"))
+# read and merge all extracted CSV files
+all_data <- do.call(rbind, lapply(list.files(pattern = "*.csv"), read.csv))
