@@ -1,0 +1,48 @@
+import pandas as pd
+
+def analyze_columns(df):
+    analysis_results = {}
+    
+    for column in df.columns:
+        col_data = df[column]
+        
+        # Determine if the column is numeric but stored as string
+        if col_data.dtype == 'object':
+            # Attempt to convert to numeric, suppress errors
+            converted_col_data = pd.to_numeric(col_data, errors='coerce')
+            
+            if converted_col_data.notna().sum() > 0:
+                # If successful conversion, it's likely numeric
+                max_value = converted_col_data.max()
+                analysis_results[column] = {
+                    'original_dtype': col_data.dtype,
+                    'suggested_dtype': 'numeric',
+                    'max_value': max_value
+                }
+            else:
+                # If conversion fails, treat as categorical
+                analysis_results[column] = {
+                    'original_dtype': col_data.dtype,
+                    'suggested_dtype': 'categorical',
+                    'max_value': None
+                }
+        else:
+            # For numeric or other types
+            max_value = col_data.max()
+            suggested_dtype = 'numeric' if pd.api.types.is_numeric_dtype(col_data) else col_data.dtype
+            analysis_results[column] = {
+                'original_dtype': col_data.dtype,
+                'suggested_dtype': suggested_dtype,
+                'max_value': max_value
+            }
+    
+    return analysis_results
+
+# Example usage
+# df = pd.read_csv('your_data.csv')
+# results = analyze_columns(df)
+# for col, analysis in results.items():
+#     print(f"Column: {col}")
+#     print(f"  Original dtype: {analysis['original_dtype']}")
+#     print(f"  Suggested dtype: {analysis['suggested_dtype']}")
+#     print(f"  Max value: {analysis['max_value']}\n")
