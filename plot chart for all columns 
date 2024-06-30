@@ -1,0 +1,78 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def visualize_columns(df):
+    num_cols = df.select_dtypes(include=['number']).columns
+    cat_cols = df.select_dtypes(include=['object', 'category']).columns
+
+    # Numeric columns
+    for col in num_cols:
+        plt.figure(figsize=(10, 6))
+        sns.histplot(df[col].dropna(), kde=True)
+        plt.title(f'Histogram of {col}')
+        plt.xlabel(col)
+        plt.ylabel('Frequency')
+        plt.show()
+
+        plt.figure(figsize=(10, 6))
+        sns.boxplot(x=df[col].dropna())
+        plt.title(f'Boxplot of {col}')
+        plt.xlabel(col)
+        plt.show()
+
+    if len(num_cols) > 1:
+        sns.pairplot(df[num_cols].dropna())
+        plt.suptitle('Pairplot of Numeric Columns', y=1.02)
+        plt.show()
+
+    # Categorical columns
+    for col in cat_cols:
+        plt.figure(figsize=(10, 6))
+        sns.countplot(y=df[col])
+        plt.title(f'Count Plot of {col}')
+        plt.ylabel(col)
+        plt.xlabel('Frequency')
+        plt.show()
+
+    # Numeric vs. Numeric
+    for i in range(len(num_cols)):
+        for j in range(i+1, len(num_cols)):
+            plt.figure(figsize=(10, 6))
+            sns.scatterplot(x=df[num_cols[i]], y=df[num_cols[j]])
+            plt.title(f'Scatterplot of {num_cols[i]} vs {num_cols[j]}')
+            plt.xlabel(num_cols[i])
+            plt.ylabel(num_cols[j])
+            plt.show()
+
+    # Numeric vs. Categorical
+    for num_col in num_cols:
+        for cat_col in cat_cols:
+            plt.figure(figsize=(10, 6))
+            sns.boxplot(x=df[cat_col], y=df[num_col])
+            plt.title(f'Boxplot of {num_col} by {cat_col}')
+            plt.xlabel(cat_col)
+            plt.ylabel(num_col)
+            plt.show()
+
+            plt.figure(figsize=(10, 6))
+            sns.violinplot(x=df[cat_col], y=df[num_col])
+            plt.title(f'Violinplot of {num_col} by {cat_col}')
+            plt.xlabel(cat_col)
+            plt.ylabel(num_col)
+            plt.show()
+
+    # Categorical vs. Categorical
+    for i in range(len(cat_cols)):
+        for j in range(i+1, len(cat_cols)):
+            plt.figure(figsize=(10, 6))
+            cross_tab = pd.crosstab(df[cat_cols[i]], df[cat_cols[j]])
+            sns.heatmap(cross_tab, annot=True, cmap='viridis')
+            plt.title(f'Heatmap of {cat_cols[i]} vs {cat_cols[j]}')
+            plt.xlabel(cat_cols[j])
+            plt.ylabel(cat_cols[i])
+            plt.show()
+
+# Example usage
+# df = pd.read_csv('your_data.csv')
+# visualize_columns(df)
