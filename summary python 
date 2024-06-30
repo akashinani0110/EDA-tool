@@ -1,0 +1,78 @@
+import pandas as pd
+
+def summarize_dataset(df):
+    num_cols = df.select_dtypes(include=['number']).columns
+    cat_cols = df.select_dtypes(include=['object', 'category']).columns
+    summary = []
+
+    def add_summary(statement):
+        summary.append(statement)
+
+    # Numeric columns
+    for col in num_cols:
+        max_value = df[col].max()
+        mean_value = df[col].mean()
+        skewness = df[col].skew()
+        median_value = df[col].median()
+        min_value = df[col].min()
+        std_dev = df[col].std()
+        null_count = df[col].isnull().sum()
+
+        add_summary(f"Numeric Column '{col}':")
+        add_summary(f" - Maximum value: {max_value}")
+        add_summary(f" - Minimum value: {min_value}")
+        add_summary(f" - Mean value: {mean_value}")
+        add_summary(f" - Median value: {median_value}")
+        add_summary(f" - Standard deviation: {std_dev}")
+        add_summary(f" - Skewness: {skewness:.2f}")
+        add_summary(f" - Null values: {null_count}")
+        add_summary("")
+
+    # Categorical columns
+    for col in cat_cols:
+        most_common_value = df[col].mode()[0]
+        unique_values = df[col].nunique()
+        null_count = df[col].isnull().sum()
+        
+        add_summary(f"Categorical Column '{col}':")
+        add_summary(f" - Most frequent value: {most_common_value}")
+        add_summary(f" - Number of unique values: {unique_values}")
+        add_summary(f" - Null values: {null_count}")
+        add_summary("")
+
+    # Numeric vs. Numeric
+    for i in range(len(num_cols)):
+        for j in range(i+1, len(num_cols)):
+            correlation = df[num_cols[i]].corr(df[num_cols[j]])
+            add_summary(f"Relationship between '{num_cols[i]}' and '{num_cols[j]}':")
+            add_summary(f" - Correlation: {correlation:.2f}")
+            add_summary("")
+
+    # Numeric vs. Categorical
+    for num_col in num_cols:
+        for cat_col in cat_cols:
+            unique_categories = df[cat_col].nunique()
+            grouped_stats = df.groupby(cat_col)[num_col].describe().unstack()
+            
+            add_summary(f"Relationship between numeric '{num_col}' and categorical '{cat_col}':")
+            add_summary(f" - Number of categories in '{cat_col}': {unique_categories}")
+            for stat in grouped_stats.index:
+                stat_summary = ", ".join([f"{cat}: {val:.2f}" for cat, val in grouped_stats[stat].items()])
+                add_summary(f"   - {stat}: {stat_summary}")
+            add_summary("")
+
+    # Categorical vs. Categorical
+    for i in range(len(cat_cols)):
+        for j in range(i+1, len(cat_cols)):
+            cross_tab = pd.crosstab(df[cat_cols[i]], df[cat_cols[j]])
+            add_summary(f"Relationship between categorical '{cat_cols[i]}' and '{cat_cols[j]}':")
+            add_summary(f" - Cross-tabulation frequency distribution:")
+            add_summary(f"{cross_tab.to_string()}")
+            add_summary("")
+
+    return "\n".join(summary)
+
+# Example usage
+# df = pd.read_csv('your_data.csv')
+# summary_text = summarize_dataset(df)
+# print(summary_text)
