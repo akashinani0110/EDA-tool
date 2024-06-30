@@ -1,0 +1,33 @@
+import pandas as pd
+
+def fill_missing_values(df, commands):
+    for column, command in commands.items():
+        if column not in df.columns:
+            print(f"Column '{column}' not found in DataFrame.")
+            continue
+        
+        if command == 'mean':
+            df[column].fillna(df[column].mean(), inplace=True)
+            print(f"Filled missing values in '{column}' with mean: {df[column].mean()}")
+        elif command == 'median':
+            df[column].fillna(df[column].median(), inplace=True)
+            print(f"Filled missing values in '{column}' with median: {df[column].median()}")
+        elif command == 'mode':
+            mode_value = df[column].mode()[0]
+            df[column].fillna(mode_value, inplace=True)
+            print(f"Filled missing values in '{column}' with mode: {mode_value}")
+        else:
+            df[column].fillna(command, inplace=True)
+            print(f"Filled missing values in '{column}' with specified value: {command}")
+
+    return df
+
+# Example usage
+# df = pd.read_csv('your_data.csv')
+# commands = {
+#     'column1': 'mean',
+#     'column2': 'median',
+#     'column3': 'mode',
+#     'column4': 'specific_value'
+# }
+# df = fill_missing_values(df, commands)
