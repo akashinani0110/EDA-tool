@@ -1,0 +1,158 @@
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+def perform_eda(df):
+    # Display basic information
+    print("Basic Information:")
+    print(df.info())
+    
+    # Display summary statistics
+    print("\nSummary Statistics:")
+    print(df.describe(include='all'))
+    
+    # Check for missing values
+    print("\nMissing Values:")
+    print(df.isnull().sum())
+    
+    # Visualize missing values
+    fig = go.Figure(data=go.Heatmap(
+        z=df.isnull(),
+        colorscale='Viridis',
+        showscale=False
+    ))
+    fig.update_layout(title='Missing Values Heatmap', xaxis_title='Columns', yaxis_title='Rows')
+    fig.show()
+    
+    # Visualize distributions of numeric columns
+    num_cols = df.select_dtypes(include=['number']).columns
+    if len(num_cols) > 0:
+        fig = make_subplots(rows=2, cols=(len(num_cols) + 1) // 2, subplot_titles=num_cols)
+        for i, col in enumerate(num_cols):
+            row = i // ((len(num_cols) + 1) // 2) + 1
+            col_position = i % ((len(num_cols) + 1) // 2) + 1
+            fig.add_trace(go.Histogram(x=df[col], name=col), row=row, col=col_position)
+        fig.update_layout(title='Histograms of Numeric Columns', showlegend=False)
+        fig.show()
+    
+    # Visualize distributions of categorical columns
+    cat_cols = df.select_dtypes(include=['object', 'category']).columns
+    for col in cat_cols:
+        fig = px.histogram(df, y=col)
+        fig.update_layout(title=f'Count Plot of {col}')
+        fig.show()
+    
+    # Pairplot for numeric columns to see pairwise relationships
+    if len(num_cols) > 1:
+        fig = px.scatter_matrix(df, dimensions=num_cols)
+        fig.update_layout(title='Pairplot of Numeric Columns')
+        fig.show()
+    
+    # Correlation heatmap
+    if len(num_cols) > 1:
+        corr = df[num_cols].corr()
+        fig = px.imshow(corr, text_auto=True, color_continuous_scale='coolwarm', aspect='auto')
+        fig.update_layout(title='Correlation Heatmap')
+        fig.show()
+    
+    # Top 5 rows of the DataFrame
+    print("\nTop 5 Rows of the DataFrame:")
+    print(df.head())
+    
+    # Value counts for each categorical column
+    for col in cat_cols:
+        print(f"\nValue Counts for {col}:")
+        print(df[col].value_counts())
+
+# Example usage
+# df = pd.read_csv('your_data.csv')
+# perform_eda(df)
+
+
+
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+def summarize_dataset(df):
+    num_cols = df.select_dtypes(include=['number']).columns
+    cat_cols = df.select_dtypes(include=['object', 'category']).columns
+    summary = []
+
+    def add_summary(statement):
+        summary.append(statement)
+
+    # Numeric columns
+    for col in num_cols:
+        max_value = df[col].max()
+        mean_value = df[col].mean()
+        skewness = df[col].skew()
+        
+        add_summary(f"Numeric Column '{col}':")
+        add_summary(f" - Maximum value: {max_value}")
+        add_summary(f" - Mean value: {mean_value}")
+        add_summary(f" - Skewness: {skewness:.2f}")
+        
+        fig = px.histogram(df, x=col, marginal="box", nbins=30, title=f'Histogram and Boxplot of {col}')
+        fig.show()
+
+    # Categorical columns
+    for col in cat_cols:
+        most_common_value = df[col].mode()[0]
+        unique_values = df[col].nunique()
+
+        add_summary(f"Categorical Column '{col}':")
+        add_summary(f" - Most frequent value: {most_common_value}")
+        add_summary(f" - Number of unique values: {unique_values}")
+        
+        fig = px.histogram(df, y=col, title=f'Count Plot of {col}')
+        fig.show()
+
+    # Numeric vs. Numeric
+    for i in range(len(num_cols)):
+        for j in range(i+1, len(num_cols)):
+            correlation = df[num_cols[i]].corr(df[num_cols[j]])
+            add_summary(f"Relationship between '{num_cols[i]}' and '{num_cols[j]}':")
+            add_summary(f" - Correlation: {correlation:.2f}")
+            
+            fig = px.scatter(df, x=num_cols[i], y=num_cols[j], title=f'Scatterplot of {num_cols[i]} vs {num_cols[j]}')
+            fig.show()
+
+    # Numeric vs. Categorical
+    for num_col in num_cols:
+        for cat_col in cat_cols:
+            unique_categories = df[cat_col].nunique()
+            add_summary(f"Relationship between numeric '{num_col}' and categorical '{cat_col}':")
+            add_summary(f" - Number of categories in '{cat_col}': {unique_categories}")
+            
+            fig = px.box(df, x=cat_col, y=num_col, title=f'Boxplot of {num_col} by {cat_col}')
+            fig.show()
+
+            fig = px.violin(df, x=cat_col, y=num_col, box=True, title=f'Violinplot of {num_col} by {cat_col}')
+            fig.show()
+
+    # Categorical vs. Categorical
+    for i in range(len(cat_cols)):
+        for j in range(i+1, len(cat_cols)):
+            add_summary(f"Relationship between categorical '{cat_cols[i]}' and '{cat_cols[j]}':")
+            cross_tab = pd.crosstab(df[cat_cols[i]], df[cat_cols[j]])
+            heatmap_title = f"Heatmap of {cat_cols[i]} vs {cat_cols[j]}"
+            add_summary(f" - See {heatmap_title} for frequency distribution.")
+            
+            fig = go.Figure(data=go.Heatmap(
+                z=cross_tab.values,
+                x=cross_tab.columns,
+                y=cross_tab.index,
+                colorscale='Viridis'
+            ))
+            fig.update_layout(title=heatmap_title, xaxis_title=cat_cols[j], yaxis_title=cat_cols[i])
+            fig.show()
+
+    return "\n".join(summary)
+
+# Example usage
+# df = pd.read_csv('your_data.csv')
+# summary_text = summarize_dataset(df)
+# print(summary_text)
